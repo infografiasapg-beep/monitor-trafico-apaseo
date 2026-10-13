@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import requests
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -9,6 +10,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 TOMTOM_API_KEY = os.environ.get("TOMTOM_API_KEY")
 GCP_SA_JSON = os.environ.get("GCP_SA_KEY")
 SPREADSHEET_NAME = "Trafico Apaseo"  # Nombre exacto de tu hoja en Google Sheets
+
+# Zona horaria local de Apaseo el Grande (Tiempo del Centro de México)
+ZONA_HORARIA = ZoneInfo("America/Mexico_City")
 
 PUNTOS_MONITOREO = [
     {"zona": "Entronque Carretera Panamericana / Libramiento", "lat": 20.5482, "lon": -100.6865},
@@ -47,7 +51,8 @@ def consultar_trafico_tomtom(lat, lon):
     return 0.0
 
 def ejecutar():
-    ahora = datetime.now()
+    # Obtiene la hora local de México
+    ahora = datetime.now(ZONA_HORARIA)
     fecha_str = ahora.strftime("%Y-%m-%d")
     dia_str = DIAS_SEMANA[ahora.weekday()]
     hora_str = ahora.strftime("%H:%M")
@@ -62,7 +67,7 @@ def ejecutar():
         print(f"[{hora_str}] {punto['zona']}: {pct_congestion}%")
 
     sheet.append_rows(filas_nuevas)
-    print("Datos registrados con éxito en Google Drive.")
+    print(f"Datos registrados con éxito a las {hora_str} (Hora México).")
 
 if __name__ == "__main__":
     ejecutar()
