@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import requests
@@ -9,12 +10,12 @@ from oauth2client.service_account import ServiceAccountCredentials
 # Credenciales desde los secretos de GitHub
 TOMTOM_API_KEY = os.environ.get("TOMTOM_API_KEY")
 GCP_SA_JSON = os.environ.get("GCP_SA_KEY")
-SPREADSHEET_NAME = "Trafico Apaseo"  # Nombre de tu hoja de cálculo destino
+SPREADSHEET_NAME = "Trafico Apaseo"
 
 # Huso horario local de Apaseo el Grande
 ZONA_HORARIA = ZoneInfo("America/Mexico_City")
 
-# Lista calibrada de puntos de monitoreo
+# Lista completa de puntos de monitoreo calibrados
 PUNTOS_MONITOREO = [
     # 1. Rodolfo Piña Soria (Semáforo) - Doble sentido
     {"zona": "Rodolfo Piña Soria (Semáforo) - Hacia Este/NE", "lat": 20.541310, "lon": -100.693311, "heading": 65},
@@ -149,24 +150,40 @@ def consultar_trafico_tomtom(lat, lon, heading=None):
         print(f"Error consultando TomTom ({lat}, {lon}): {e}")
     return 0.0
 
-def ejecutar():
+def registrar_ciclo(sheet):
     ahora = datetime.now(ZONA_HORARIA)
     fecha_str = ahora.strftime("%Y-%m-%d")
     dia_str = DIAS_SEMANA[ahora.weekday()]
     hora_str = ahora.strftime("%H:%M")
 
-    sheet = conectar_google_sheets()
     filas_nuevas = []
-
     for punto in PUNTOS_MONITOREO:
         rumbo = punto.get("heading")
         pct_congestion = consultar_trafico_tomtom(punto["lat"], punto["lon"], heading=rumbo)
         fila = [fecha_str, dia_str, hora_str, f"{pct_congestion}%", punto["zona"]]
         filas_nuevas.append(fila)
-        print(f"[{hora_str}] {punto['zona']}: {pct_congestion}%")
 
     sheet.append_rows(filas_nuevas)
-    print(f"Total de {len(filas_nuevas)} mediciones registradas con éxito a las {hora_str} (Hora México).")
+    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados exitosamente.")
+
+def main():
+    print("Iniciando conexión a Google Sheets...")
+    sheet = conectar_google_sheets()
+    
+    # Ejecuta exactamente 4 ciclos separados por 15 minutos (900 seg) cada hora
+    total_ciclos = 4
+    intervalo_segundos = 900  # 15 minutos
+
+    for i in range(total_ciclos):
+        print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---")
+        registrar_ciclo(sheet)
+        
+        # Solo espera si aún quedan tomas pendientes en este ciclo
+        if i < total_ciclos - 1:
+            print(f"Esperando 15 minutos exactos para la siguiente toma...")
+            time.sleep(intervalo_segundos)
+
+    print("\nCiclo por hora completado con éxito.")
 
 if __name__ == "__main__":
-    ejecutar()
+    main()
