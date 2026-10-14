@@ -97,9 +97,9 @@ PUNTOS_MONITOREO = [
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976, "heading": 115},
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976, "heading": 295},
 
-    # 25. Narciso Mendoza (Puente Colorado Oeste) - Doble sentido
-    {"zona": "Narciso Mendoza (Puente Colorado Oeste) - Hacia Poniente", "lat": 20.548115, "lon": -100.686503, "heading": 295},
-    {"zona": "Narciso Mendoza (Puente Colorado Oeste) - Hacia Oriente", "lat": 20.548115, "lon": -100.686503, "heading": 115},
+    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Doble sentido (coordenada centrada en el tramo)
+    {"zona": "Narciso Mendoza (Ocampo a Aldama) - Hacia Poniente", "lat": 20.547550, "lon": -100.687650, "heading": 295},
+    {"zona": "Narciso Mendoza (Ocampo a Aldama) - Hacia Oriente", "lat": 20.547550, "lon": -100.687650, "heading": 115},
 
     # 26. Morelos Semáforo (Este) - Doble sentido
     {"zona": "Morelos Semáforo (Este) - Hacia Poniente/Centro", "lat": 20.543178, "lon": -100.678348, "heading": 270},
@@ -131,8 +131,9 @@ def conectar_google_sheets():
     return client.open(SPREADSHEET_NAME).sheet1
 
 def consultar_datos_trafico(lat, lon, heading=None):
-    """Consulta la API de TomTom y extrae velocidad, flujo libre, retraso y congestión."""
-    url = f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point={lat},{lon}&key={TOMTOM_API_KEY}"
+    """Consulta la API de TomTom con zoom detallado (18) para calles urbanas locales."""
+    # Aquí se ajusta el nivel de detalle a 18:
+    url = f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/18/json?point={lat},{lon}&key={TOMTOM_API_KEY}"
     if heading is not None:
         url += f"&heading={heading}"
 
