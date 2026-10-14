@@ -2,9 +2,9 @@ name: Monitor Trafico Apaseo
 
 on:
   schedule:
-    # Se ejecuta cada 15 minutos de forma automática
-    - cron: '*/15 * * * *'
-  workflow_dispatch: # Permite ejecutarlo manualmente cuando quieras para probar
+    # Se ejecuta al minuto 5 de cada hora
+    - cron: '5 * * * *'
+  workflow_dispatch: # Permite disparo manual cuando quieras
 
 jobs:
   registrar_trafico:
@@ -22,7 +22,7 @@ jobs:
         run: |
           pip install requests gspread oauth2client
 
-      - name: Ejecutar recoleccion
+      - name: Ejecutar recoleccion (1 hora continua cada 15 min)
         env:
           TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
