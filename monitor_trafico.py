@@ -130,7 +130,8 @@ def conectar_google_sheets():
     client = gspread.authorize(creds)
     return client.open(SPREADSHEET_NAME).sheet1
 
-def consultar_trafico_tomtom(lat, lon, heading=None):
+def consultar_datos_trafico(lat, lon, heading=None):
+    """Consulta la API de TomTom y extrae velocidad, flujo libre, retraso y congestión."""
     url = f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point={lat},{lon}&key={TOMTOM_API_KEY}"
     if heading is not None:
         url += f"&heading={heading}"
@@ -141,14 +142,33 @@ def consultar_trafico_tomtom(lat, lon, heading=None):
             data = resp.json().get("flowSegmentData", {})
             current_speed = data.get("currentSpeed", 0)
             free_flow_speed = data.get("freeFlowSpeed", 0)
+            current_travel_time = data.get("currentTravelTime", 0)
+            free_flow_travel_time = data.get("freeFlowTravelTime", 0)
+
+            # Cálculo de retraso en segundos
+            retraso_seg = max(0, current_travel_time - free_flow_travel_time)
+
+            # Cálculo de porcentaje de congestión
             if free_flow_speed > 0:
                 congestion = max(0, ((free_flow_speed - current_speed) / free_flow_speed) * 100)
             else:
                 congestion = 0.0
-            return round(congestion, 1)
+
+            return {
+                "vel_real": current_speed,
+                "vel_libre": free_flow_speed,
+                "congestion": round(congestion, 1),
+                "retraso": retraso_seg
+            }
     except Exception as e:
         print(f"Error consultando TomTom ({lat}, {lon}): {e}")
-    return 0.0
+
+    return {
+        "vel_real": 0,
+        "vel_libre": 0,
+        "congestion": 0.0,
+        "retraso": 0
+    }
 
 def registrar_ciclo(sheet):
     ahora = datetime.now(ZONA_HORARIA)
@@ -159,31 +179,40 @@ def registrar_ciclo(sheet):
     filas_nuevas = []
     for punto in PUNTOS_MONITOREO:
         rumbo = punto.get("heading")
-        pct_congestion = consultar_trafico_tomtom(punto["lat"], punto["lon"], heading=rumbo)
-        fila = [fecha_str, dia_str, hora_str, f"{pct_congestion}%", punto["zona"]]
+        datos = consultar_datos_trafico(punto["lat"], punto["lon"], heading=rumbo)
+        
+        # Estructura: Fecha, Día, Hora, Zona, Vel. Real, Vel. Libre, % Congestión, Retraso
+        fila = [
+            fecha_str,
+            dia_str,
+            hora_str,
+            punto["zona"],
+            datos["vel_real"],
+            datos["vel_libre"],
+            f"{datos['congestion']}%",
+            datos["retraso"]
+        ]
         filas_nuevas.append(fila)
 
     sheet.append_rows(filas_nuevas)
-    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados exitosamente.")
+    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados exitosamente con métricas ampliadas.")
 
 def main():
     print("Iniciando conexión a Google Sheets...")
     sheet = conectar_google_sheets()
     
-    # Ejecuta exactamente 4 ciclos separados por 15 minutos (900 seg) cada hora
     total_ciclos = 4
-    intervalo_segundos = 900  # 15 minutos
+    intervalo_segundos = 900  # 15 minutos exactos
 
     for i in range(total_ciclos):
         print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---")
         registrar_ciclo(sheet)
         
-        # Solo espera si aún quedan tomas pendientes en este ciclo
         if i < total_ciclos - 1:
-            print(f"Esperando 15 minutos exactos para la siguiente toma...")
+            print("Esperando 15 minutos para la siguiente toma...")
             time.sleep(intervalo_segundos)
 
-    print("\nCiclo por hora completado con éxito.")
+    print("\nBloque de 1 hora completado con éxito.")
 
 if __name__ == "__main__":
     main()
