@@ -97,9 +97,9 @@ PUNTOS_MONITOREO = [
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976, "heading": 115},
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976, "heading": 295},
 
-    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Doble sentido (coordenada centrada en el tramo)
-    {"zona": "Narciso Mendoza (Ocampo a Aldama) - Hacia Poniente", "lat": 20.547550, "lon": -100.687650, "heading": 295},
-    {"zona": "Narciso Mendoza (Ocampo a Aldama) - Hacia Oriente", "lat": 20.547550, "lon": -100.687650, "heading": 115},
+    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Calibrado al carril en rojo
+    {"zona": "Narciso Mendoza (Hacia Aldama/Oriente)", "lat": 20.547780, "lon": -100.686580, "heading": 115},
+    {"zona": "Narciso Mendoza (Saliendo de Aldama/Poniente)", "lat": 20.547820, "lon": -100.686580, "heading": 295},
 
     # 26. Morelos Semáforo (Este) - Doble sentido
     {"zona": "Morelos Semáforo (Este) - Hacia Poniente/Centro", "lat": 20.543178, "lon": -100.678348, "heading": 270},
@@ -131,8 +131,7 @@ def conectar_google_sheets():
     return client.open(SPREADSHEET_NAME).sheet1
 
 def consultar_datos_trafico(lat, lon, heading=None):
-    """Consulta la API de TomTom con zoom detallado (18) para calles urbanas locales."""
-    # Aquí se ajusta el nivel de detalle a 18:
+    """Consulta la API de TomTom con zoom 18 para capturar segmentos urbanos exactos."""
     url = f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/18/json?point={lat},{lon}&key={TOMTOM_API_KEY}"
     if heading is not None:
         url += f"&heading={heading}"
@@ -146,10 +145,8 @@ def consultar_datos_trafico(lat, lon, heading=None):
             current_travel_time = data.get("currentTravelTime", 0)
             free_flow_travel_time = data.get("freeFlowTravelTime", 0)
 
-            # Cálculo de retraso en segundos
             retraso_seg = max(0, current_travel_time - free_flow_travel_time)
 
-            # Cálculo de porcentaje de congestión
             if free_flow_speed > 0:
                 congestion = max(0, ((free_flow_speed - current_speed) / free_flow_speed) * 100)
             else:
@@ -182,7 +179,6 @@ def registrar_ciclo(sheet):
         rumbo = punto.get("heading")
         datos = consultar_datos_trafico(punto["lat"], punto["lon"], heading=rumbo)
         
-        # Estructura: Fecha, Día, Hora, Zona, Vel. Real, Vel. Libre, % Congestión, Retraso
         fila = [
             fecha_str,
             dia_str,
