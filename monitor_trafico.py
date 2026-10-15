@@ -97,12 +97,11 @@ PUNTOS_MONITOREO = [
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976},
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976},
 
-    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Centrado en el tramo
+    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Centrado en tramo urbano
     {"zona": "Narciso Mendoza (Ocampo a Aldama)", "lat": 20.547600, "lon": -100.687800},
 
-    # 26. Morelos Semáforo (Este)
-    {"zona": "Morelos Semáforo (Este) - Hacia Poniente/Centro", "lat": 20.543178, "lon": -100.678348},
-    {"zona": "Morelos Semáforo (Este) - Hacia Oriente/Salida", "lat": 20.543178, "lon": -100.678348},
+    # 26. Morelos (Aproximación al semáforo hacia el Oeste / Centro)
+    {"zona": "Morelos Semáforo (Hacia Poniente/Centro)", "lat": 20.543140, "lon": -100.677980},
 
     # 27. Del Charro (Semáforo Sur)
     {"zona": "Del Charro (Semáforo Sur) - Hacia Norte", "lat": 20.543015, "lon": -100.678676},
