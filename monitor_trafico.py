@@ -97,8 +97,8 @@ PUNTOS_MONITOREO = [
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976},
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976},
 
-    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Centrado en tramo urbano
-    {"zona": "Narciso Mendoza (Ocampo a Aldama)", "lat": 20.547600, "lon": -100.687800},
+    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Centrado sobre Narciso Mendoza
+    {"zona": "Narciso Mendoza (Ocampo a Aldama)", "lat": 20.548180, "lon": -100.687450},
 
     # 26. Morelos (Aproximación al semáforo hacia el Oeste / Centro)
     {"zona": "Morelos Semáforo (Hacia Poniente/Centro)", "lat": 20.543140, "lon": -100.677980},
@@ -141,10 +141,10 @@ def consultar_datos_trafico(lat, lon):
             current_travel_time = data.get("currentTravelTime", 0)
             free_flow_travel_time = data.get("freeFlowTravelTime", 0)
 
-            # Cálculo de retraso en segundos respecto al flujo libre
+            # Retraso en segundos respecto al flujo libre
             retraso_seg = max(0, current_travel_time - free_flow_travel_time)
 
-            # Cálculo de porcentaje de congestión
+            # Porcentaje de congestión
             if free_flow_speed > 0:
                 congestion = max(0, ((free_flow_speed - current_speed) / free_flow_speed) * 100)
             else:
@@ -176,7 +176,7 @@ def registrar_ciclo(sheet):
     for punto in PUNTOS_MONITOREO:
         datos = consultar_datos_trafico(punto["lat"], punto["lon"])
         
-        # Estructura: Fecha, Día, Hora, Zona, Velocidad Real, Velocidad Libre, % Congestión, Retraso
+        # 8 Columnas: Fecha, Día, Hora, Zona, Velocidad Real, Velocidad Libre, % Congestión, Retraso
         fila = [
             fecha_str,
             dia_str,
