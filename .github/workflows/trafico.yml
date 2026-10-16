@@ -2,15 +2,18 @@ name: Monitor Trafico Apaseo
 
 on:
   schedule:
-    # Se ejecuta al minuto 5 de cada hora
-    - cron: '5 * * * *'
-  workflow_dispatch: # Permite disparo manual cuando quieras
+    # 11:30 UTC = 5:30 AM hora local Apaseo el Grande
+    - cron: '30 11 * * *'
+    # Cada hora al minuto 30 desde las 6:30 AM hasta las 9:30 PM local (12:30 a 03:30 UTC)
+    - cron: '30 12-23 * * *'
+    - cron: '30 0-3 * * *'
+  workflow_dispatch:
 
 jobs:
   registrar_trafico:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar codigo
+      - name: Descargar repositorio
         uses: actions/checkout@v4
 
       - name: Configurar Python
@@ -20,11 +23,11 @@ jobs:
 
       - name: Instalar dependencias
         run: |
+          python -m pip install --upgrade pip
           pip install requests gspread oauth2client
 
-      - name: Ejecutar recoleccion (1 hora continua cada 15 min)
+      - name: Ejecutar monitor de trafico
         env:
           TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: |
-          python monitor_trafico.py
+        run: python monitor_trafico.py
