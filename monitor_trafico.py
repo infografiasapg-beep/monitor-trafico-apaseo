@@ -90,7 +90,7 @@ PUNTOS_MONITOREO = [
     # 21. Juan Aldama (Comunilab)
     {"zona": "Juan Aldama (Comunilab)", "lat": 20.5468316, "lon": -100.6869879},
 
-    # 22. Juan Aldama (Puente Colorado Sur)
+    # 22. Juan Aldama (Puente Colorado Sur) - Coordenadas especificadas
     {"zona": "Juan Aldama (Puente Colorado Sur)", "lat": 20.547828, "lon": -100.686353},
 
     # 23. Juan Aldama, Puente Colorado (Norte)
@@ -220,7 +220,7 @@ def main():
         print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---")
         continuar = registrar_ciclo(sheet)
         
-        # Si se cruzó el límite de las 22:00, se detiene
+        # Si se cruza el límite de las 22:00, se detiene
         if not continuar:
             break
         
@@ -228,7 +228,7 @@ def main():
             print("Esperando 15 minutos para la siguiente toma...")
             time.sleep(intervalo_segundos)
 
-    print("\nBloque completado.")
+    print("\nBloque completado con éxito.")
 
 if __name__ == "__main__":
     main()
