@@ -1,7 +1,7 @@
 import os
 import json
 import time
-from datetime import datetime
+from datetime import datetime, time as dtime
 from zoneinfo import ZoneInfo
 import requests
 import gspread
@@ -14,6 +14,10 @@ SPREADSHEET_NAME = "Trafico Apaseo"
 
 # Huso horario local de Apaseo el Grande
 ZONA_HORARIA = ZoneInfo("America/Mexico_City")
+
+# Rango horario permitido: 5:30 am a 10:00 pm (22:00)
+HORA_INICIO = dtime(5, 30)
+HORA_FIN = dtime(22, 0)
 
 # Lista completa de puntos de monitoreo calibrados
 PUNTOS_MONITOREO = [
@@ -97,10 +101,10 @@ PUNTOS_MONITOREO = [
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976},
     {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976},
 
-    # 25. Narciso Mendoza (Tramo Ocampo a Aldama) - Centrado sobre Narciso Mendoza
+    # 25. Narciso Mendoza (Tramo Ocampo a Aldama)
     {"zona": "Narciso Mendoza (Ocampo a Aldama)", "lat": 20.548180, "lon": -100.687450},
 
-    # 26. Morelos (Aproximación al semáforo hacia el Oeste / Centro)
+    # 26. Morelos (Aproximación al semáforo hacia el Poniente / Centro)
     {"zona": "Morelos Semáforo (Hacia Poniente/Centro)", "lat": 20.543140, "lon": -100.677980},
 
     # 27. Del Charro (Semáforo Sur)
@@ -121,6 +125,11 @@ DIAS_SEMANA = {
     4: "Viernes", 5: "Sábado", 6: "Domingo"
 }
 
+def esta_en_horario_monitoreo(ahora):
+    """Verifica si la hora actual está entre las 05:30 y las 22:00 en Apaseo el Grande."""
+    hora_actual = ahora.time()
+    return HORA_INICIO <= hora_actual <= HORA_FIN
+
 def conectar_google_sheets():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     creds_dict = json.loads(GCP_SA_JSON)
@@ -129,7 +138,6 @@ def conectar_google_sheets():
     return client.open(SPREADSHEET_NAME).sheet1
 
 def consultar_datos_trafico(lat, lon):
-    """Consulta la API de TomTom con zoom 18 para capturar segmentos urbanos específicos."""
     url = f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/18/json?point={lat},{lon}&key={TOMTOM_API_KEY}"
 
     try:
@@ -141,10 +149,8 @@ def consultar_datos_trafico(lat, lon):
             current_travel_time = data.get("currentTravelTime", 0)
             free_flow_travel_time = data.get("freeFlowTravelTime", 0)
 
-            # Retraso en segundos respecto al flujo libre
             retraso_seg = max(0, current_travel_time - free_flow_travel_time)
 
-            # Porcentaje de congestión
             if free_flow_speed > 0:
                 congestion = max(0, ((free_flow_speed - current_speed) / free_flow_speed) * 100)
             else:
@@ -168,6 +174,12 @@ def consultar_datos_trafico(lat, lon):
 
 def registrar_ciclo(sheet):
     ahora = datetime.now(ZONA_HORARIA)
+    
+    # Validar si está en la ventana 05:30 - 22:00
+    if not esta_en_horario_monitoreo(ahora):
+        print(f"[{ahora.strftime('%H:%M')}] Fuera de horario de monitoreo (05:30 a 22:00). Finalizando ciclo.")
+        return False
+
     fecha_str = ahora.strftime("%Y-%m-%d")
     dia_str = DIAS_SEMANA[ahora.weekday()]
     hora_str = ahora.strftime("%H:%M")
@@ -176,7 +188,6 @@ def registrar_ciclo(sheet):
     for punto in PUNTOS_MONITOREO:
         datos = consultar_datos_trafico(punto["lat"], punto["lon"])
         
-        # 8 Columnas: Fecha, Día, Hora, Zona, Velocidad Real, Velocidad Libre, % Congestión, Retraso
         fila = [
             fecha_str,
             dia_str,
@@ -190,24 +201,34 @@ def registrar_ciclo(sheet):
         filas_nuevas.append(fila)
 
     sheet.append_rows(filas_nuevas)
-    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados exitosamente con métricas ampliadas.")
+    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados exitosamente.")
+    return True
 
 def main():
+    ahora_inicial = datetime.now(ZONA_HORARIA)
+    if not esta_en_horario_monitoreo(ahora_inicial):
+        print(f"Hora actual ({ahora_inicial.strftime('%H:%M')}) fuera de la ventana 05:30 a 22:00. No se ejecutará la toma.")
+        return
+
     print("Iniciando conexión a Google Sheets...")
     sheet = conectar_google_sheets()
     
     total_ciclos = 4
-    intervalo_segundos = 900  # 15 minutos exactos
+    intervalo_segundos = 900  # 15 minutos
 
     for i in range(total_ciclos):
         print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---")
-        registrar_ciclo(sheet)
+        continuar = registrar_ciclo(sheet)
+        
+        # Si se cruzó el límite de las 22:00, se detiene
+        if not continuar:
+            break
         
         if i < total_ciclos - 1:
             print("Esperando 15 minutos para la siguiente toma...")
             time.sleep(intervalo_segundos)
 
-    print("\nBloque de 1 hora completado con éxito.")
+    print("\nBloque completado.")
 
 if __name__ == "__main__":
     main()
