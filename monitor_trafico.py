@@ -19,105 +19,82 @@ ZONA_HORARIA = ZoneInfo("America/Mexico_City")
 HORA_INICIO = dtime(5, 30)
 HORA_FIN = dtime(22, 0)
 
-# Lista completa de puntos de monitoreo calibrados
+# Lista completa de puntos de monitoreo ordenada alfabéticamente por calle
 PUNTOS_MONITOREO = [
-    # 1. Rodolfo Piña Soria (Semáforo)
-    {"zona": "Rodolfo Piña Soria (Semáforo) - Hacia Este/NE", "lat": 20.541310, "lon": -100.693311},
-    {"zona": "Rodolfo Piña Soria (Semáforo) - Hacia Oeste/SO", "lat": 20.541310, "lon": -100.693311},
-
-    # 2. Rodolfo Piña Soria (ETA)
-    {"zona": "Rodolfo Piña Soria (ETA) - Hacia Este/NE", "lat": 20.542033, "lon": -100.691589},
-    {"zona": "Rodolfo Piña Soria (ETA) - Hacia Oeste/SO", "lat": 20.542033, "lon": -100.691589},
-
-    # 3. Antonio Plaza (Gas. Mobil)
+    # --- ANTONIO PLAZA ---
     {"zona": "Antonio Plaza (Gas. Mobil)", "lat": 20.541935, "lon": -100.692770},
-
-    # 4. Vicente Guerrero / Antonio Plaza
-    {"zona": "Vicente Guerrero / Antonio Plaza", "lat": 20.543529, "lon": -100.692272},
-
-    # 5. Pípila / Venustiano Carranza
-    {"zona": "Pipila / Venustiano Carranza", "lat": 20.545164, "lon": -100.691833},
-
-    # 6. Pípila (Mercado)
-    {"zona": "Pipila (Mercado)", "lat": 20.546697, "lon": -100.690982},
-
-    # 7. Antonio Plaza (Mercado)
     {"zona": "Antonio Plaza (Mercado)", "lat": 20.546480, "lon": -100.690602},
 
-    # 8. Jesús Cabrera Muñoz Ledo (Semáforo)
-    {"zona": "Jesus Cabrera Muñoz Ledo (Semáforo) - Hacia Norte", "lat": 20.545480, "lon": -100.692821},
-    {"zona": "Jesus Cabrera Muñoz Ledo (Semáforo) - Hacia Sur", "lat": 20.545480, "lon": -100.692821},
-
-    # 9. Jesús Cabrera Muñoz Ledo (Nutrióloga)
-    {"zona": "Jesus Cabrera Muñoz Ledo (Nutriologa) - Hacia Norte", "lat": 20.546340, "lon": -100.693041},
-    {"zona": "Jesus Cabrera Muñoz Ledo (Nutriologa) - Hacia Sur", "lat": 20.546340, "lon": -100.693041},
-
-    # 10. Octaviano Muñoz Ledo con esq. Nicolás San Luis de Montañez
-    {"zona": "Octaviano Muñoz Ledo esq. Nicolas San Luis - Hacia Este/Centro", "lat": 20.549326, "lon": -100.692837},
-    {"zona": "Octaviano Muñoz Ledo esq. Nicolas San Luis - Hacia Poniente/Salida", "lat": 20.549326, "lon": -100.692837},
-
-    # 11. Nicolás San Luis de Montañez esq. Octaviano Muñoz Ledo
-    {"zona": "Nicolas San Luis de Montañez esq. Octaviano - Hacia Norte", "lat": 20.549086, "lon": -100.693303},
-    {"zona": "Nicolas San Luis de Montañez esq. Octaviano - Hacia Sur", "lat": 20.549086, "lon": -100.693303},
-
-    # 12. Vicente A. Ruiz (Aurrerá)
-    {"zona": "Vicente A. Ruiz. (Aurrerá)", "lat": 20.548228, "lon": -100.690233},
-
-    # 13. Octaviano Muñoz Ledo (Los Charcos)
-    {"zona": "Octaviano Muñoz Ledo (Los Charcos)", "lat": 20.548410, "lon": -100.689976},
-
-    # 14. Melchor Ocampo (Sanatorio Macías)
-    {"zona": "Melchor Ocampo (Sanatorio Macías)", "lat": 20.546492, "lon": -100.689083},
-
-    # 15. Guadalupe Victoria (Tienda 3B)
-    {"zona": "Guadalupe Victoria (Tienda 3B)", "lat": 20.546374, "lon": -100.689581},
-
-    # 16. Guadalupe Victoria (Elektra)
-    {"zona": "Guadalupe Victoria (Elektra)", "lat": 20.545829, "lon": -100.688402},
-
-    # 17. Mariano Matamoros (Jardín Hidalgo)
-    {"zona": "Mariano Matamoros (Jardín Hidalgo)", "lat": 20.545411, "lon": -100.688246},
-
-    # 18. Mariano Matamoros (Impladeag)
-    {"zona": "Mariano Matamoros (Impladeag)", "lat": 20.543175, "lon": -100.689379},
-
-    # 19. Ignacio Allende (Parroquia)
-    {"zona": "Ignacio Allende (Parroquia)", "lat": 20.545289, "lon": -100.687442},
-
-    # 20. Ignacio Allende (Hospital San Juan)
-    {"zona": "Ignacio Allende (Hospital San Juan)", "lat": 20.5448306, "lon": -100.6861881},
-
-    # 21. Juan Aldama (Comunilab)
-    {"zona": "Juan Aldama (Comunilab)", "lat": 20.5468316, "lon": -100.6869879},
-
-    # 22. Juan Aldama (Puente Colorado Sur) - Coordenadas especificadas
-    {"zona": "Juan Aldama (Puente Colorado Sur)", "lat": 20.547828, "lon": -100.686353},
-
-    # 23. Juan Aldama, Puente Colorado (Norte)
-    {"zona": "Juan Aldama, Puente Colorado (Norte) - Hacia Sur/Centro", "lat": 20.548262, "lon": -100.686137},
-    {"zona": "Juan Aldama, Puente Colorado (Norte) - Hacia Norte/Panamericana", "lat": 20.548262, "lon": -100.686137},
-
-    # 24. Narciso Mendoza (Puente Colorado Este)
-    {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976},
-    {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976},
-
-    # 25. Narciso Mendoza (Tramo Ocampo a Aldama)
-    {"zona": "Narciso Mendoza (Ocampo a Aldama)", "lat": 20.548180, "lon": -100.687450},
-
-    # 26. Morelos (Aproximación al semáforo hacia el Poniente / Centro)
-    {"zona": "Morelos Semáforo (Hacia Poniente/Centro)", "lat": 20.543140, "lon": -100.677980},
-
-    # 27. Del Charro (Semáforo Sur)
+    # --- DEL CHARRO ---
+    {"zona": "Del Charro (Semáforo Norte) - Hacia Norte", "lat": 20.543619, "lon": -100.678565},
+    {"zona": "Del Charro (Semáforo Norte) - Hacia Sur", "lat": 20.543619, "lon": -100.678565},
     {"zona": "Del Charro (Semáforo Sur) - Hacia Norte", "lat": 20.543015, "lon": -100.678676},
     {"zona": "Del Charro (Semáforo Sur) - Hacia Sur", "lat": 20.543015, "lon": -100.678676},
 
-    # 28. Del Charro (Semáforo Norte)
-    {"zona": "Del Charro (Semáforo Norte) - Hacia Sur", "lat": 20.543619, "lon": -100.678565},
-    {"zona": "Del Charro (Semáforo Norte) - Hacia Norte", "lat": 20.543619, "lon": -100.678565},
+    # --- GUADALUPE VICTORIA ---
+    {"zona": "Guadalupe Victoria (Elektra)", "lat": 20.545829, "lon": -100.688402},
+    {"zona": "Guadalupe Victoria (Tienda 3B)", "lat": 20.546374, "lon": -100.689581},
 
-    # 29. Lib. Sur (VÍA)
+    # --- IGNACIO ALLENDE ---
+    {"zona": "Ignacio Allende (Hospital San Juan)", "lat": 20.5448306, "lon": -100.6861881},
+    {"zona": "Ignacio Allende (Parroquia)", "lat": 20.545289, "lon": -100.687442},
+
+    # --- JESÚS CABRERA MUÑOZ LEDO ---
+    {"zona": "Jesús Cabrera Muñoz Ledo (Nutrióloga) - Hacia Norte", "lat": 20.546340, "lon": -100.693041},
+    {"zona": "Jesús Cabrera Muñoz Ledo (Nutrióloga) - Hacia Sur", "lat": 20.546340, "lon": -100.693041},
+    {"zona": "Jesús Cabrera Muñoz Ledo (Semáforo) - Hacia Norte", "lat": 20.545480, "lon": -100.692821},
+    {"zona": "Jesús Cabrera Muñoz Ledo (Semáforo) - Hacia Sur", "lat": 20.545480, "lon": -100.692821},
+
+    # --- JUAN ALDAMA ---
+    {"zona": "Juan Aldama (Comunilab)", "lat": 20.5466675, "lon": -100.6869746},
+    {"zona": "Juan Aldama (Puente Colorado Norte) - Hacia Norte/Panamericana", "lat": 20.548262, "lon": -100.686137},
+    {"zona": "Juan Aldama (Puente Colorado Norte) - Hacia Sur/Centro", "lat": 20.548262, "lon": -100.686137},
+    {"zona": "Juan Aldama (Puente Colorado Sur)", "lat": 20.547828, "lon": -100.686353},
+
+    # --- LIBRAMIENTO SUR ---
     {"zona": "Lib. Sur (VÍA) - Hacia Oriente/Querétaro", "lat": 20.540724, "lon": -100.673911},
     {"zona": "Lib. Sur (VÍA) - Hacia Poniente/Celaya", "lat": 20.540724, "lon": -100.673911},
+
+    # --- MARIANO MATAMOROS ---
+    {"zona": "Mariano Matamoros (Impladeag)", "lat": 20.543175, "lon": -100.689379},
+    {"zona": "Mariano Matamoros (Jardín Hidalgo)", "lat": 20.545411, "lon": -100.688246},
+
+    # --- MELCHOR OCAMPO ---
+    {"zona": "Melchor Ocampo (Sanatorio Macías)", "lat": 20.546492, "lon": -100.689083},
+
+    # --- MORELOS ---
+    {"zona": "Morelos (Colegio Vasco)", "lat": 20.5464484, "lon": -100.6856178},
+    {"zona": "Morelos Semáforo (Hacia Poniente/Centro)", "lat": 20.543140, "lon": -100.677980},
+
+    # --- NARCISO MENDOZA ---
+    {"zona": "Narciso Mendoza (Ocampo a Aldama)", "lat": 20.548180, "lon": -100.687450},
+    {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976},
+    {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976},
+
+    # --- NICOLÁS SAN LUIS DE MONTAÑEZ ---
+    {"zona": "Nicolás San Luis de Montañez esq. Octaviano - Hacia Norte", "lat": 20.549086, "lon": -100.693303},
+    {"zona": "Nicolás San Luis de Montañez esq. Octaviano - Hacia Sur", "lat": 20.549086, "lon": -100.693303},
+
+    # --- OCTAVIANO MUÑOZ LEDO ---
+    {"zona": "Octaviano Muñoz Ledo (Los Charcos)", "lat": 20.548410, "lon": -100.689976},
+    {"zona": "Octaviano Muñoz Ledo esq. Nicolás San Luis - Hacia Este/Centro", "lat": 20.549326, "lon": -100.692837},
+    {"zona": "Octaviano Muñoz Ledo esq. Nicolás San Luis - Hacia Poniente/Salida", "lat": 20.549326, "lon": -100.692837},
+
+    # --- PÍPILA ---
+    {"zona": "Pípila / Venustiano Carranza", "lat": 20.545164, "lon": -100.691833},
+    {"zona": "Pípila (Mercado)", "lat": 20.546697, "lon": -100.690982},
+
+    # --- RODOLFO PIÑA SORIA ---
+    {"zona": "Rodolfo Piña Soria (ETA) - Hacia Este/NE", "lat": 20.542033, "lon": -100.691589},
+    {"zona": "Rodolfo Piña Soria (ETA) - Hacia Oeste/SO", "lat": 20.542033, "lon": -100.691589},
+    {"zona": "Rodolfo Piña Soria (Semáforo) - Hacia Este/NE", "lat": 20.541310, "lon": -100.693311},
+    {"zona": "Rodolfo Piña Soria (Semáforo) - Hacia Oeste/SO", "lat": 20.541310, "lon": -100.693311},
+
+    # --- VICENTE A. RUIZ ---
+    {"zona": "Vicente A. Ruiz (Aurrerá)", "lat": 20.548228, "lon": -100.690233},
+
+    # --- VICENTE GUERRERO ---
+    {"zona": "Vicente Guerrero / Antonio Plaza", "lat": 20.543529, "lon": -100.692272},
 ]
 
 DIAS_SEMANA = {
