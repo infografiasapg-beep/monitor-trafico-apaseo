@@ -35,8 +35,8 @@ PUNTOS_MONITOREO = [
     {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Norte / Salida)", "lat": 20.545503, "lon": -100.692827},
     {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Sur / Centro)", "lat": 20.545503, "lon": -100.692827},
 
-    # 5. Juan Aldama (Puente Colorado) - Reubicado a recta despejada (centro de cuadra)
-    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.547280, "lon": -100.686700},
+    # 5. Juan Aldama (Puente Colorado) - Coordenada ajustada
+    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.547467, "lon": -100.686468},
 
     # 6. Mariano Matamoros (Presidencia)
     {"zona": "Mariano Matamoros - Presidencia (Sur a Norte)", "lat": 20.545107, "lon": -100.688410},
@@ -89,17 +89,21 @@ def conectar_google_sheets():
     client = gspread.authorize(creds)
     return client.open(SPREADSHEET_NAME).sheet1
 
-def consultar_datos_trafico(lat, lon):
+def consultar_datos_trafico(lat, lon, nombre_zona):
     url = f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/18/json?point={lat},{lon}&key={TOMTOM_API_KEY}"
 
     try:
         resp = requests.get(url, timeout=15)
         if resp.status_code == 200:
-            data = resp.json().get("flowSegmentData", {})
-            current_speed = data.get("currentSpeed", 0)
-            free_flow_speed = data.get("freeFlowSpeed", 0)
-            current_travel_time = data.get("currentTravelTime", 0)
-            free_flow_travel_time = data.get("freeFlowTravelTime", 0)
+            flow_data = resp.json().get("flowSegmentData")
+            if not flow_data:
+                print(f"[Aviso] {nombre_zona} ({lat}, {lon}) no devolvió segmento de tráfico.")
+                return {"vel_real": 0, "vel_libre": 0, "congestion": 0.0, "retraso": 0}
+
+            current_speed = flow_data.get("currentSpeed", 0)
+            free_flow_speed = flow_data.get("freeFlowSpeed", 0)
+            current_travel_time = flow_data.get("currentTravelTime", 0)
+            free_flow_travel_time = flow_data.get("freeFlowTravelTime", 0)
 
             retraso_seg = max(0, current_travel_time - free_flow_travel_time)
 
@@ -115,9 +119,9 @@ def consultar_datos_trafico(lat, lon):
                 "retraso": retraso_seg
             }
         else:
-            print(f"TomTom respondió código: {resp.status_code}")
+            print(f"[Error TomTom] {nombre_zona} respondió HTTP {resp.status_code}")
     except Exception as e:
-        print(f"Error consultando TomTom ({lat}, {lon}): {e}")
+        print(f"[Excepción] Error consultando {nombre_zona} ({lat}, {lon}): {e}")
 
     return {
         "vel_real": 0,
@@ -139,7 +143,7 @@ def registrar_ciclo(sheet):
 
     filas_nuevas = []
     for punto in PUNTOS_MONITOREO:
-        datos = consultar_datos_trafico(punto["lat"], punto["lon"])
+        datos = consultar_datos_trafico(punto["lat"], punto["lon"], punto["zona"])
         
         fila = [
             fecha_str,
