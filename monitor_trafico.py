@@ -15,97 +15,72 @@ SPREADSHEET_NAME = "Trafico Apaseo"
 # Huso horario local de Apaseo el Grande
 ZONA_HORARIA = ZoneInfo("America/Mexico_City")
 
-# Rango horario permitido: 5:30 am a 10:00 pm (22:00)
+# Rango horario de captura: 5:30 am a 10:00 pm (22:00)
 HORA_INICIO = dtime(5, 30)
 HORA_FIN = dtime(22, 0)
 
-# Lista completa de puntos de monitoreo ordenada alfabéticamente por calle
+# Lista completa de 21 registros organizada alfabéticamente
 PUNTOS_MONITOREO = [
-    # --- ANTONIO PLAZA ---
-    {"zona": "Antonio Plaza (Gas. Mobil)", "lat": 20.541935, "lon": -100.692770},
-    {"zona": "Antonio Plaza (Mercado)", "lat": 20.546480, "lon": -100.690602},
+    # 1. Antonio Plaza
+    {"zona": "Antonio Plaza (Norte a Sur)", "lat": 20.542009, "lon": -100.692750},
 
-    # --- DEL CHARRO ---
-    {"zona": "Del Charro (Semáforo Norte) - Hacia Norte", "lat": 20.543619, "lon": -100.678565},
-    {"zona": "Del Charro (Semáforo Norte) - Hacia Sur", "lat": 20.543619, "lon": -100.678565},
-    {"zona": "Del Charro (Semáforo Sur) - Hacia Norte", "lat": 20.543015, "lon": -100.678676},
-    {"zona": "Del Charro (Semáforo Sur) - Hacia Sur", "lat": 20.543015, "lon": -100.678676},
+    # 2. Guadalupe Victoria (Elektra)
+    {"zona": "Guadalupe Victoria - Elektra (Oeste a Este)", "lat": 20.545793, "lon": -100.688365},
 
-    # --- GUADALUPE VICTORIA ---
-    {"zona": "Guadalupe Victoria (Elektra)", "lat": 20.545829, "lon": -100.688402},
-    {"zona": "Guadalupe Victoria (Tienda 3B)", "lat": 20.546374, "lon": -100.689581},
+    # 3. Jesús Cabrera M. (Escuela Nuevo Mundo) - Doble Sentido
+    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Norte)", "lat": 20.546324, "lon": -100.693058},
+    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Sur)", "lat": 20.546324, "lon": -100.693058},
 
-    # --- IGNACIO ALLENDE ---
-    {"zona": "Ignacio Allende (Hospital San Juan)", "lat": 20.5448306, "lon": -100.6861881},
-    {"zona": "Ignacio Allende (Parroquia)", "lat": 20.545289, "lon": -100.687442},
+    # 4. Jesús Cabrera M. (Semáforo Oxxo) - Doble Sentido
+    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Norte / Salida)", "lat": 20.545503, "lon": -100.692827},
+    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Sur / Centro)", "lat": 20.545503, "lon": -100.692827},
 
-    # --- JESÚS CABRERA MUÑOZ LEDO ---
-    {"zona": "Jesús Cabrera Muñoz Ledo (Nutrióloga) - Hacia Norte", "lat": 20.546340, "lon": -100.693041},
-    {"zona": "Jesús Cabrera Muñoz Ledo (Nutrióloga) - Hacia Sur", "lat": 20.546340, "lon": -100.693041},
-    {"zona": "Jesús Cabrera Muñoz Ledo (Semáforo) - Hacia Norte", "lat": 20.545480, "lon": -100.692821},
-    {"zona": "Jesús Cabrera Muñoz Ledo (Semáforo) - Hacia Sur", "lat": 20.545480, "lon": -100.692821},
+    # 5. Juan Aldama (Puente Colorado)
+    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.547575, "lon": -100.686489},
 
-    # --- JUAN ALDAMA ---
-    {"zona": "Juan Aldama (Comunilab)", "lat": 20.5466675, "lon": -100.6869746},
-    {"zona": "Juan Aldama (Puente Colorado Norte) - Hacia Norte/Panamericana", "lat": 20.548262, "lon": -100.686137},
-    {"zona": "Juan Aldama (Puente Colorado Norte) - Hacia Sur/Centro", "lat": 20.548262, "lon": -100.686137},
-    {"zona": "Juan Aldama (Puente Colorado Sur)", "lat": 20.547828, "lon": -100.686353},
+    # 6. Mariano Matamoros (Presidencia)
+    {"zona": "Mariano Matamoros - Presidencia (Sur a Norte)", "lat": 20.545107, "lon": -100.688410},
 
-    # --- LIBRAMIENTO SUR ---
-    {"zona": "Lib. Sur (VÍA) - Hacia Oriente/Querétaro", "lat": 20.540724, "lon": -100.673911},
-    {"zona": "Lib. Sur (VÍA) - Hacia Poniente/Celaya", "lat": 20.540724, "lon": -100.673911},
+    # 7. Melchor Ocampo (Sanatorio Macías)
+    {"zona": "Melchor Ocampo - Sanatorio Macías (Norte a Sur)", "lat": 20.546439, "lon": -100.689101},
 
-    # --- MARIANO MATAMOROS ---
-    {"zona": "Mariano Matamoros (Impladeag)", "lat": 20.543175, "lon": -100.689379},
-    {"zona": "Mariano Matamoros (Jardín Hidalgo)", "lat": 20.545411, "lon": -100.688246},
+    # 8. Morelos (Semáforo Lienzo Charro) - Doble Sentido
+    {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Oriente / Salida)", "lat": 20.543142, "lon": -100.678080},
+    {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Poniente / Centro)", "lat": 20.543142, "lon": -100.678080},
 
-    # --- MELCHOR OCAMPO ---
-    {"zona": "Melchor Ocampo (Sanatorio Macías)", "lat": 20.546492, "lon": -100.689083},
+    # 9. Narciso Mendoza (Libros Rocío) - Doble Sentido
+    {"zona": "Narciso Mendoza - Libros Rocío (Hacia Oriente / Puente Colorado)", "lat": 20.548127, "lon": -100.686624},
+    {"zona": "Narciso Mendoza - Libros Rocío (Hacia Poniente / Ocampo)", "lat": 20.548127, "lon": -100.686624},
 
-    # --- MORELOS ---
-    {"zona": "Morelos (Colegio Vasco)", "lat": 20.5464484, "lon": -100.6856178},
-    {"zona": "Morelos Semáforo (Hacia Poniente/Centro)", "lat": 20.543140, "lon": -100.677980},
+    # 10. Narciso Mendoza (Semáforo Este a Oeste) - Doble Sentido
+    {"zona": "Narciso Mendoza - Semáforo (Hacia Oriente)", "lat": 20.547922, "lon": -100.685871},
+    {"zona": "Narciso Mendoza - Semáforo (Hacia Poniente)", "lat": 20.547922, "lon": -100.685871},
 
-    # --- NARCISO MENDOZA ---
-    {"zona": "Narciso Mendoza (Ocampo a Aldama)", "lat": 20.548180, "lon": -100.687450},
-    {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Oriente", "lat": 20.547935, "lon": -100.685976},
-    {"zona": "Narciso Mendoza (Puente Colorado Este) - Hacia Poniente", "lat": 20.547935, "lon": -100.685976},
+    # 11. Octaviano Muñoz Ledo (Los Charcos)
+    {"zona": "Octaviano Muñoz Ledo - Los Charcos (Este a Oeste)", "lat": 20.548394, "lon": -100.689885},
 
-    # --- NICOLÁS SAN LUIS DE MONTAÑEZ ---
-    {"zona": "Nicolás San Luis de Montañez esq. Octaviano - Hacia Norte", "lat": 20.549086, "lon": -100.693303},
-    {"zona": "Nicolás San Luis de Montañez esq. Octaviano - Hacia Sur", "lat": 20.549086, "lon": -100.693303},
+    # 12. Pípila (Mercado)
+    {"zona": "Pípila - Mercado (Sur a Norte)", "lat": 20.546627, "lon": -100.691033},
 
-    # --- OCTAVIANO MUÑOZ LEDO ---
-    {"zona": "Octaviano Muñoz Ledo (Los Charcos)", "lat": 20.548410, "lon": -100.689976},
-    {"zona": "Octaviano Muñoz Ledo esq. Nicolás San Luis - Hacia Este/Centro", "lat": 20.549326, "lon": -100.692837},
-    {"zona": "Octaviano Muñoz Ledo esq. Nicolás San Luis - Hacia Poniente/Salida", "lat": 20.549326, "lon": -100.692837},
+    # 13. Piña Soria (Auto Zone) - Doble Sentido
+    {"zona": "Piña Soria - Auto Zone (Hacia Este / Salida Qro)", "lat": 20.541780, "lon": -100.692170},
+    {"zona": "Piña Soria - Auto Zone (Hacia Oeste / Centro)", "lat": 20.541780, "lon": -100.692170},
 
-    # --- PÍPILA ---
-    {"zona": "Pípila / Venustiano Carranza", "lat": 20.545164, "lon": -100.691833},
-    {"zona": "Pípila (Mercado)", "lat": 20.546697, "lon": -100.690982},
+    # 14. Venustiano Carranza (Central)
+    {"zona": "Venustiano Carranza - Central (Este a Oeste)", "lat": 20.545699, "lon": -100.692539},
 
-    # --- RODOLFO PIÑA SORIA ---
-    {"zona": "Rodolfo Piña Soria (ETA) - Hacia Este/NE", "lat": 20.542033, "lon": -100.691589},
-    {"zona": "Rodolfo Piña Soria (ETA) - Hacia Oeste/SO", "lat": 20.542033, "lon": -100.691589},
-    {"zona": "Rodolfo Piña Soria (Semáforo) - Hacia Este/NE", "lat": 20.541310, "lon": -100.693311},
-    {"zona": "Rodolfo Piña Soria (Semáforo) - Hacia Oeste/SO", "lat": 20.541310, "lon": -100.693311},
-
-    # --- VICENTE A. RUIZ ---
-    {"zona": "Vicente A. Ruiz (Aurrerá)", "lat": 20.548228, "lon": -100.690233},
-
-    # --- VICENTE GUERRERO ---
-    {"zona": "Vicente Guerrero / Antonio Plaza", "lat": 20.543529, "lon": -100.692272},
+    # 15. Vicente Ruiz (Aurrerá)
+    {"zona": "Vicente Ruiz - Aurrerá (Sur a Norte)", "lat": 20.548210, "lon": -100.690237},
 ]
 
 DIAS_SEMANA = {
-    0: "Lunes", 1: "Martes", 2: "Miércoles", 3: "Jueves", 
+    0: "Lunes", 1: "Martes", 2: "Miércoles", 3: "Jueves",
     4: "Viernes", 5: "Sábado", 6: "Domingo"
 }
 
 def esta_en_horario_monitoreo(ahora):
-    """Verifica si la hora actual está entre las 05:30 y las 22:00 en Apaseo el Grande."""
-    hora_actual = ahora.time()
-    return HORA_INICIO <= hora_actual <= HORA_FIN
+    """Verifica si la hora actual local está dentro del rango 05:30 a 22:00."""
+    return HORA_INICIO <= ahora.time() <= HORA_FIN
 
 def conectar_google_sheets():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -139,6 +114,8 @@ def consultar_datos_trafico(lat, lon):
                 "congestion": round(congestion, 1),
                 "retraso": retraso_seg
             }
+        else:
+            print(f"TomTom respondió código: {resp.status_code}")
     except Exception as e:
         print(f"Error consultando TomTom ({lat}, {lon}): {e}")
 
@@ -152,9 +129,8 @@ def consultar_datos_trafico(lat, lon):
 def registrar_ciclo(sheet):
     ahora = datetime.now(ZONA_HORARIA)
     
-    # Validar si está en la ventana 05:30 - 22:00
     if not esta_en_horario_monitoreo(ahora):
-        print(f"[{ahora.strftime('%H:%M')}] Fuera de horario de monitoreo (05:30 a 22:00). Finalizando ciclo.")
+        print(f"[{ahora.strftime('%H:%M')}] Fuera de la ventana de monitoreo (05:30 a 22:00).")
         return False
 
     fecha_str = ahora.strftime("%Y-%m-%d")
@@ -176,18 +152,19 @@ def registrar_ciclo(sheet):
             datos["retraso"]
         ]
         filas_nuevas.append(fila)
+        time.sleep(0.1)  # Breve pausa para proteger las consultas
 
     sheet.append_rows(filas_nuevas)
-    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados exitosamente.")
+    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados correctamente.")
     return True
 
 def main():
     ahora_inicial = datetime.now(ZONA_HORARIA)
     if not esta_en_horario_monitoreo(ahora_inicial):
-        print(f"Hora actual ({ahora_inicial.strftime('%H:%M')}) fuera de la ventana 05:30 a 22:00. No se ejecutará la toma.")
+        print(f"Hora actual ({ahora_inicial.strftime('%H:%M')}) fuera de horario. Esperando siguiente ciclo.")
         return
 
-    print("Iniciando conexión a Google Sheets...")
+    print("Conectando con Google Sheets...")
     sheet = conectar_google_sheets()
     
     total_ciclos = 4
@@ -197,7 +174,6 @@ def main():
         print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---")
         continuar = registrar_ciclo(sheet)
         
-        # Si se cruza el límite de las 22:00, se detiene
         if not continuar:
             break
         
@@ -205,7 +181,7 @@ def main():
             print("Esperando 15 minutos para la siguiente toma...")
             time.sleep(intervalo_segundos)
 
-    print("\nBloque completado con éxito.")
+    print("\nCiclo por hora finalizado con éxito.")
 
 if __name__ == "__main__":
     main()
