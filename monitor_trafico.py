@@ -19,7 +19,7 @@ ZONA_HORARIA = ZoneInfo("America/Mexico_City")
 HORA_INICIO = dtime(5, 30)
 HORA_FIN = dtime(22, 0)
 
-# Lista completa de 21 registros organizada alfabéticamente
+# Lista de 21 registros calibrados y ordenados alfabéticamente
 PUNTOS_MONITOREO = [
     # 1. Antonio Plaza
     {"zona": "Antonio Plaza (Norte a Sur)", "lat": 20.542009, "lon": -100.692750},
@@ -35,8 +35,8 @@ PUNTOS_MONITOREO = [
     {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Norte / Salida)", "lat": 20.545503, "lon": -100.692827},
     {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Sur / Centro)", "lat": 20.545503, "lon": -100.692827},
 
-    # 5. Juan Aldama (Puente Colorado)
-    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.547575, "lon": -100.686489},
+    # 5. Juan Aldama (Puente Colorado) - Reubicado a recta despejada (centro de cuadra)
+    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.547280, "lon": -100.686700},
 
     # 6. Mariano Matamoros (Presidencia)
     {"zona": "Mariano Matamoros - Presidencia (Sur a Norte)", "lat": 20.545107, "lon": -100.688410},
@@ -152,7 +152,7 @@ def registrar_ciclo(sheet):
             datos["retraso"]
         ]
         filas_nuevas.append(fila)
-        time.sleep(0.1)  # Breve pausa para proteger las consultas
+        time.sleep(0.1)
 
     sheet.append_rows(filas_nuevas)
     print(f"[{hora_str}] {len(filas_nuevas)} registros guardados correctamente.")
