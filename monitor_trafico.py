@@ -73,4 +73,118 @@ PUNTOS_MONITOREO = [
     {"zona": "Vicente Ruiz - Aurrerá (Sur a Norte)", "lat": 20.548210, "lon": -100.690237},
 ]
 
-DIAS
+DIAS_SEMANA = {
+    0: "Lunes", 1: "Martes", 2: "Miércoles", 3: "Jueves",
+    4: "Viernes", 5: "Sábado", 6: "Domingo"
+}
+
+def esta_en_horario_monitoreo(ahora):
+    return HORA_INICIO <= ahora.time() <= HORA_FIN
+
+def conectar_google_sheets():
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds_dict = json.loads(GCP_SA_JSON)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(creds)
+    return client.open(SPREADSHEET_NAME).sheet1
+
+def consultar_datos_trafico(lat, lon, nombre_zona):
+    url = f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/18/json?point={lat},{lon}&key={TOMTOM_API_KEY}"
+
+    try:
+        resp = requests.get(url, timeout=15)
+        if resp.status_code == 200:
+            flow_data = resp.json().get("flowSegmentData")
+            if not flow_data:
+                print(f"[Aviso] {nombre_zona} ({lat}, {lon}) no devolvió segmento de tráfico.", flush=True)
+                return {"vel_real": 0, "vel_libre": 0, "congestion": 0.0, "retraso": 0}
+
+            current_speed = flow_data.get("currentSpeed", 0)
+            free_flow_speed = flow_data.get("freeFlowSpeed", 0)
+            current_travel_time = flow_data.get("currentTravelTime", 0)
+            free_flow_travel_time = flow_data.get("freeFlowTravelTime", 0)
+
+            retraso_seg = max(0, current_travel_time - free_flow_travel_time)
+
+            if free_flow_speed > 0:
+                congestion = max(0, ((free_flow_speed - current_speed) / free_flow_speed) * 100)
+            else:
+                congestion = 0.0
+
+            return {
+                "vel_real": current_speed,
+                "vel_libre": free_flow_speed,
+                "congestion": round(congestion, 1),
+                "retraso": retraso_seg
+            }
+        else:
+            print(f"[Error TomTom] {nombre_zona} respondió HTTP {resp.status_code}", flush=True)
+    except Exception as e:
+        print(f"[Excepción] Error consultando {nombre_zona} ({lat}, {lon}): {e}", flush=True)
+
+    return {
+        "vel_real": 0,
+        "vel_libre": 0,
+        "congestion": 0.0,
+        "retraso": 0
+    }
+
+def registrar_ciclo(sheet):
+    ahora = datetime.now(ZONA_HORARIA)
+    
+    if not esta_en_horario_monitoreo(ahora):
+        print(f"[{ahora.strftime('%H:%M')}] Fuera de la ventana de monitoreo (05:30 a 22:00).", flush=True)
+        return False
+
+    fecha_str = ahora.strftime("%Y-%m-%d")
+    dia_str = DIAS_SEMANA[ahora.weekday()]
+    hora_str = ahora.strftime("%H:%M")
+
+    filas_nuevas = []
+    for punto in PUNTOS_MONITOREO:
+        datos = consultar_datos_trafico(punto["lat"], punto["lon"], punto["zona"])
+        
+        fila = [
+            fecha_str,
+            dia_str,
+            hora_str,
+            punto["zona"],
+            datos["vel_real"],
+            datos["vel_libre"],
+            f"{datos['congestion']}%",
+            datos["retraso"]
+        ]
+        filas_nuevas.append(fila)
+        time.sleep(0.1)
+
+    sheet.append_rows(filas_nuevas)
+    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados correctamente.", flush=True)
+    return True
+
+def main():
+    ahora_inicial = datetime.now(ZONA_HORARIA)
+    if not esta_en_horario_monitoreo(ahora_inicial):
+        print(f"Hora actual ({ahora_inicial.strftime('%H:%M')}) fuera de horario. Esperando siguiente ciclo.", flush=True)
+        return
+
+    print("Conectando con Google Sheets...", flush=True)
+    sheet = conectar_google_sheets()
+    
+    total_ciclos = 4
+    intervalo_segundos = 900  # 15 minutos
+
+    for i in range(total_ciclos):
+        print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---", flush=True)
+        continuar = registrar_ciclo(sheet)
+        
+        if not continuar:
+            break
+        
+        if i < total_ciclos - 1:
+            print("Esperando 15 minutos para la siguiente toma...", flush=True)
+            time.sleep(intervalo_segundos)
+
+    print("\nCiclo por hora finalizado con éxito.", flush=True)
+
+if __name__ == "__main__":
+    main()
