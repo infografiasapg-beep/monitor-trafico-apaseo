@@ -30,4 +30,4 @@ jobs:
         env:
           TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: python monitor_trafico.py
+       run: python -u monitor_trafico.py
