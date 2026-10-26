@@ -27,16 +27,16 @@ PUNTOS_MONITOREO = [
     # 2. Guadalupe Victoria (Elektra)
     {"zona": "Guadalupe Victoria - Elektra (Oeste a Este)", "lat": 20.545793, "lon": -100.688365},
 
-    # 3. Jesús Cabrera M. (Escuela Nuevo Mundo) - Doble Sentido
-    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Norte)", "lat": 20.546324, "lon": -100.693058},
-    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Sur)", "lat": 20.546324, "lon": -100.693058},
+    # 3. Jesús Cabrera M. (Escuela Nuevo Mundo) - Coordenadas actualizadas (20.5463, -100.69302)
+    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Norte)", "lat": 20.5463, "lon": -100.69302},
+    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Sur)", "lat": 20.5463, "lon": -100.69302},
 
-    # 4. Jesús Cabrera M. (Semáforo Oxxo) - Doble Sentido
-    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Norte / Salida)", "lat": 20.545503, "lon": -100.692827},
-    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Sur / Centro)", "lat": 20.545503, "lon": -100.692827},
+    # 4. Jesús Cabrera M. (Semáforo Oxxo) - Coordenadas actualizadas (20.54559, -100.69297)
+    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Norte / Salida)", "lat": 20.54559, "lon": -100.69297},
+    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Sur / Centro)", "lat": 20.54559, "lon": -100.69297},
 
-    # 5. Juan Aldama (Puente Colorado) - Coordenada ajustada
-    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.547467, "lon": -100.686468},
+    # 5. Juan Aldama (Puente Colorado) - Coordenadas actualizadas (20.54767, -100.68658)
+    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.54767, "lon": -100.68658},
 
     # 6. Mariano Matamoros (Presidencia)
     {"zona": "Mariano Matamoros - Presidencia (Sur a Norte)", "lat": 20.545107, "lon": -100.688410},
@@ -62,9 +62,9 @@ PUNTOS_MONITOREO = [
     # 12. Pípila (Mercado)
     {"zona": "Pípila - Mercado (Sur a Norte)", "lat": 20.546627, "lon": -100.691033},
 
-    # 13. Piña Soria (Auto Zone) - Doble Sentido
-    {"zona": "Piña Soria - Auto Zone (Hacia Este / Salida Qro)", "lat": 20.541780, "lon": -100.692170},
-    {"zona": "Piña Soria - Auto Zone (Hacia Oeste / Centro)", "lat": 20.541780, "lon": -100.692170},
+    # 13. Piña Soria (Auto Zone) - Coordenadas actualizadas (20.54182, -100.69227)
+    {"zona": "Piña Soria - Auto Zone (Hacia Este / Salida Qro)", "lat": 20.54182, "lon": -100.69227},
+    {"zona": "Piña Soria - Auto Zone (Hacia Oeste / Centro)", "lat": 20.54182, "lon": -100.69227},
 
     # 14. Venustiano Carranza (Central)
     {"zona": "Venustiano Carranza - Central (Este a Oeste)", "lat": 20.545699, "lon": -100.692539},
