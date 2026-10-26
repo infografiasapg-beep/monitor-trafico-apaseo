@@ -48,7 +48,7 @@ PUNTOS_MONITOREO = [
     {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Oriente / Salida)", "lat": 20.543142, "lon": -100.678080},
     {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Poniente / Centro)", "lat": 20.543250, "lon": -100.678750},
 
-    # 9. Narciso Mendoza (Libros Rocío) - Nueva coordenada aplicada (20.54802, -100.68644)
+    # 9. Narciso Mendoza (Libros Rocío) - Coordenada (20.54802, -100.68644)
     {"zona": "Narciso Mendoza - Libros Rocío (Hacia Oriente / Puente Colorado)", "lat": 20.548020, "lon": -100.686440},
     {"zona": "Narciso Mendoza - Libros Rocío (Hacia Poniente / Ocampo)", "lat": 20.548180, "lon": -100.687200},
 
@@ -70,4 +70,7 @@ PUNTOS_MONITOREO = [
     {"zona": "Venustiano Carranza - Central (Este a Oeste)", "lat": 20.545699, "lon": -100.692539},
 
     # 15. Vicente Ruiz (Aurrerá)
-    {"zona": "Vicente Ruiz - Aurrerá (Sur a Norte)", "lat": 20.548210, "lon": -100.
+    {"zona": "Vicente Ruiz - Aurrerá (Sur a Norte)", "lat": 20.548210, "lon": -100.690237},
+]
+
+DIAS
