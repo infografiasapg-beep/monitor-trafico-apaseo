@@ -27,16 +27,16 @@ PUNTOS_MONITOREO = [
     # 2. Guadalupe Victoria (Elektra)
     {"zona": "Guadalupe Victoria - Elektra (Oeste a Este)", "lat": 20.545793, "lon": -100.688365},
 
-    # 3. Jesús Cabrera M. (Escuela Nuevo Mundo) - Coordenadas actualizadas (20.5463, -100.69302)
+    # 3. Jesús Cabrera M. (Escuela Nuevo Mundo) - Doble Sentido
     {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Norte)", "lat": 20.5463, "lon": -100.69302},
     {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Sur)", "lat": 20.5463, "lon": -100.69302},
 
-    # 4. Jesús Cabrera M. (Semáforo Oxxo) - Coordenadas actualizadas (20.54559, -100.69297)
+    # 4. Jesús Cabrera M. (Semáforo Oxxo) - Doble Sentido
     {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Norte / Salida)", "lat": 20.54559, "lon": -100.69297},
     {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Sur / Centro)", "lat": 20.54559, "lon": -100.69297},
 
-    # 5. Juan Aldama (Puente Colorado) - Coordenadas actualizadas (20.54767, -100.68658)
-    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.54767, "lon": -100.68658},
+    # 5. Juan Aldama (Puente Colorado) - Coordenada ajustada (20.54768, -100.68644)
+    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.54768, "lon": -100.68644},
 
     # 6. Mariano Matamoros (Presidencia)
     {"zona": "Mariano Matamoros - Presidencia (Sur a Norte)", "lat": 20.545107, "lon": -100.688410},
@@ -62,7 +62,7 @@ PUNTOS_MONITOREO = [
     # 12. Pípila (Mercado)
     {"zona": "Pípila - Mercado (Sur a Norte)", "lat": 20.546627, "lon": -100.691033},
 
-    # 13. Piña Soria (Auto Zone) - Coordenadas actualizadas (20.54182, -100.69227)
+    # 13. Piña Soria (Auto Zone) - Doble Sentido
     {"zona": "Piña Soria - Auto Zone (Hacia Este / Salida Qro)", "lat": 20.54182, "lon": -100.69227},
     {"zona": "Piña Soria - Auto Zone (Hacia Oeste / Centro)", "lat": 20.54182, "lon": -100.69227},
 
@@ -97,13 +97,17 @@ def consultar_datos_trafico(lat, lon, nombre_zona):
         if resp.status_code == 200:
             flow_data = resp.json().get("flowSegmentData")
             if not flow_data:
-                print(f"[Aviso] {nombre_zona} ({lat}, {lon}) no devolvió segmento de tráfico.")
+                print(f"[Aviso] {nombre_zona} ({lat}, {lon}) no devolvió segmento de tráfico.", flush=True)
                 return {"vel_real": 0, "vel_libre": 0, "congestion": 0.0, "retraso": 0}
 
             current_speed = flow_data.get("currentSpeed", 0)
             free_flow_speed = flow_data.get("freeFlowSpeed", 0)
             current_travel_time = flow_data.get("currentTravelTime", 0)
             free_flow_travel_time = flow_data.get("freeFlowTravelTime", 0)
+
+            # Diagnóstico explícito en consola para verificar qué segmento detecta TomTom
+            if "Juan Aldama" in nombre_zona:
+                print(f"[DEBUG Juan Aldama] Coords: ({lat}, {lon}) | VelReal: {current_speed} km/h | VelLibre: {free_flow_speed} km/h", flush=True)
 
             retraso_seg = max(0, current_travel_time - free_flow_travel_time)
 
@@ -119,9 +123,9 @@ def consultar_datos_trafico(lat, lon, nombre_zona):
                 "retraso": retraso_seg
             }
         else:
-            print(f"[Error TomTom] {nombre_zona} respondió HTTP {resp.status_code}")
+            print(f"[Error TomTom] {nombre_zona} respondió HTTP {resp.status_code}", flush=True)
     except Exception as e:
-        print(f"[Excepción] Error consultando {nombre_zona} ({lat}, {lon}): {e}")
+        print(f"[Excepción] Error consultando {nombre_zona} ({lat}, {lon}): {e}", flush=True)
 
     return {
         "vel_real": 0,
@@ -134,7 +138,7 @@ def registrar_ciclo(sheet):
     ahora = datetime.now(ZONA_HORARIA)
     
     if not esta_en_horario_monitoreo(ahora):
-        print(f"[{ahora.strftime('%H:%M')}] Fuera de la ventana de monitoreo (05:30 a 22:00).")
+        print(f"[{ahora.strftime('%H:%M')}] Fuera de la ventana de monitoreo (05:30 a 22:00).", flush=True)
         return False
 
     fecha_str = ahora.strftime("%Y-%m-%d")
@@ -159,33 +163,33 @@ def registrar_ciclo(sheet):
         time.sleep(0.1)
 
     sheet.append_rows(filas_nuevas)
-    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados correctamente.")
+    print(f"[{hora_str}] {len(filas_nuevas)} registros guardados correctamente.", flush=True)
     return True
 
 def main():
     ahora_inicial = datetime.now(ZONA_HORARIA)
     if not esta_en_horario_monitoreo(ahora_inicial):
-        print(f"Hora actual ({ahora_inicial.strftime('%H:%M')}) fuera de horario. Esperando siguiente ciclo.")
+        print(f"Hora actual ({ahora_inicial.strftime('%H:%M')}) fuera de horario. Esperando siguiente ciclo.", flush=True)
         return
 
-    print("Conectando con Google Sheets...")
+    print("Conectando con Google Sheets...", flush=True)
     sheet = conectar_google_sheets()
     
     total_ciclos = 4
     intervalo_segundos = 900  # 15 minutos
 
     for i in range(total_ciclos):
-        print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---")
+        print(f"\n--- Ejecutando toma {i + 1} de {total_ciclos} ---", flush=True)
         continuar = registrar_ciclo(sheet)
         
         if not continuar:
             break
         
         if i < total_ciclos - 1:
-            print("Esperando 15 minutos para la siguiente toma...")
+            print("Esperando 15 minutos para la siguiente toma...", flush=True)
             time.sleep(intervalo_segundos)
 
-    print("\nCiclo por hora finalizado con éxito.")
+    print("\nCiclo por hora finalizado con éxito.", flush=True)
 
 if __name__ == "__main__":
     main()
