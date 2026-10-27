@@ -19,58 +19,28 @@ ZONA_HORARIA = ZoneInfo("America/Mexico_City")
 HORA_INICIO = dtime(5, 30)
 HORA_FIN = dtime(22, 0)
 
-# Lista de 21 registros calibrados y ordenados alfabéticamente
+# Lista completa de puntos de monitoreo extraídos de tu tabla
 PUNTOS_MONITOREO = [
-    # 1. Antonio Plaza
-    {"zona": "Antonio Plaza (Norte a Sur)", "lat": 20.542009, "lon": -100.692750},
-
-    # 2. Guadalupe Victoria (Elektra)
+    {"zona": "Antonio Plaza (Norte a Sur)", "lat": 20.542009, "lon": -100.69275},
     {"zona": "Guadalupe Victoria - Elektra (Oeste a Este)", "lat": 20.545793, "lon": -100.688365},
-
-    # 3. Jesús Cabrera M. (Escuela Nuevo Mundo) - Coordenadas actualizadas (20.54655, -100.6932)
-    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Norte)", "lat": 20.546550, "lon": -100.693200},
-    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Sur)", "lat": 20.546550, "lon": -100.693200},
-
-    # 4. Jesús Cabrera M. (Semáforo Oxxo) - Coordenadas actualizadas (20.54674, -100.69308)
-    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Norte / Salida)", "lat": 20.546740, "lon": -100.693080},
-    {"zona": "Jesús Cabrera M. - Semáforo Oxxo (Hacia Sur / Centro)", "lat": 20.546740, "lon": -100.693080},
-
-    # 5. Juan Aldama (Puente Colorado)
-    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.547680, "lon": -100.686440},
-
-    # 6. Mariano Matamoros (Presidencia)
-    {"zona": "Mariano Matamoros - Presidencia (Sur a Norte)", "lat": 20.545107, "lon": -100.688410},
-
-    # 7. Melchor Ocampo (Sanatorio Macías)
+    {"zona": "Jesús Cabrera M. - Escuela Nuevo Mundo (Hacia Sur)", "lat": 20.5462143, "lon": -100.6930116},
+    {"zona": "Jesús Cabrera M. - Semaforo Oxxo", "lat": 20.545245, "lon": -100.692707},
+    {"zona": "Jesús Cabrera M. - Gasolinera Repsol", "lat": 20.544307, "lon": -100.692544},
+    {"zona": "Juan Aldama - Puente Colorado (Sur a Norte)", "lat": 20.54766, "lon": -100.68638},
+    {"zona": "Mariano Matamoros - Presidencia (Sur a Norte)", "lat": 20.545107, "lon": -100.68841},
     {"zona": "Melchor Ocampo - Sanatorio Macías (Norte a Sur)", "lat": 20.546439, "lon": -100.689101},
-
-    # 8. Morelos (Semáforo Lienzo Charro) - Doble Sentido
-    {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Oriente / Salida)", "lat": 20.543142, "lon": -100.678080},
-    {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Poniente / Centro)", "lat": 20.543250, "lon": -100.678750},
-
-    # 9. Narciso Mendoza (Libros Rocío) - Doble Sentido
-    {"zona": "Narciso Mendoza - Libros Rocío (Hacia Oriente / Puente Colorado)", "lat": 20.548020, "lon": -100.686440},
-    {"zona": "Narciso Mendoza - Libros Rocío (Hacia Poniente / Ocampo)", "lat": 20.548180, "lon": -100.687200},
-
-    # 10. Narciso Mendoza (Semáforo Este a Oeste) - Doble Sentido
-    {"zona": "Narciso Mendoza - Semáforo (Hacia Oriente)", "lat": 20.547922, "lon": -100.685871},
-    {"zona": "Narciso Mendoza - Semáforo (Hacia Poniente)", "lat": 20.547980, "lon": -100.685350},
-
-    # 11. Octaviano Muñoz Ledo (Los Charcos)
+    {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Oriente / Salida)", "lat": 20.543142, "lon": -100.67808},
+    {"zona": "Morelos - Semáforo Lienzo Charro (Hacia Poniente / Centro)", "lat": 20.54325, "lon": -100.67875},
+    {"zona": "Narciso Mendoza - Libros Rocío (Hacia Oriente / Puente Colorado)", "lat": 20.548134, "lon": -100.686754},
+    {"zona": "Narciso Mendoza - Libros Rocío (Hacia Poniente / Ocampo)", "lat": 20.54818, "lon": -100.6872},
+    {"zona": "Narciso Mendoza - Semáforo (Hacia Oriente)", "lat": 20.547989, "lon": -100.685942},
+    {"zona": "Narciso Mendoza - Semáforo (Hacia Poniente)", "lat": 20.54798, "lon": -100.68535},
     {"zona": "Octaviano Muñoz Ledo - Los Charcos (Este a Oeste)", "lat": 20.548394, "lon": -100.689885},
-
-    # 12. Pípila (Mercado)
-    {"zona": "Pípila - Mercado (Sur a Norte)", "lat": 20.546627, "lon": -100.691033},
-
-    # 13. Piña Soria (Auto Zone) - Coordenadas actualizadas (20.54167, -100.69266)
-    {"zona": "Piña Soria - Auto Zone (Hacia Este / Salida Qro)", "lat": 20.541670, "lon": -100.692660},
-    {"zona": "Piña Soria - Auto Zone (Hacia Oeste / Centro)", "lat": 20.541670, "lon": -100.692660},
-
-    # 14. Venustiano Carranza (Central)
+    {"zona": "Pípila - Mercado (Sur a Norte)", "lat": 20.546691, "lon": -100.690979},
+    {"zona": "Piña Soria - Auto Zone (Hacia Este / Salida Qro)", "lat": 20.541670, "lon": -100.692220},
+    {"zona": "Piña Soria - Auto Zone (Hacia Oeste / Centro)", "lat": 20.54167, "lon": -100.69266},
     {"zona": "Venustiano Carranza - Central (Este a Oeste)", "lat": 20.545699, "lon": -100.692539},
-
-    # 15. Vicente Ruiz (Aurrerá)
-    {"zona": "Vicente Ruiz - Aurrerá (Sur a Norte)", "lat": 20.548210, "lon": -100.690237},
+    {"zona": "Vicente Ruiz - Aurrerá (Sur a Norte)", "lat": 20.54821, "lon": -100.690237},
 ]
 
 DIAS_SEMANA = {
